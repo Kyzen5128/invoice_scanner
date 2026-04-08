@@ -96,21 +96,37 @@ class _InvoiceDetailPageState extends ConsumerState<InvoiceDetailPage> {
                 date: date,
               );
 
-              // 4. 顯示全螢幕半透明等待彈窗
+              // 4. 先抓住 navigator 跟 router (避免 await 後 context 失效或 navigator 鎖定)
+              final navigator = Navigator.of(context, rootNavigator: true);
+              final router = GoRouter.of(context);
+
+              // 5. 顯示全螢幕半透明等待彈窗
               showDialog(
                 context: context,
                 barrierDismissible: false,
+                useRootNavigator: true,
                 builder: (c) => const Center(child: CircularProgressIndicator()),
               );
 
-              // 5. 等待寫入本地儲存庫
-              await ref.read(provider.notifier).save();
-              
-              if (context.mounted) {
-                // 6. 關閉等待彈窗，並切換回發票清單頁
-                Navigator.pop(context); // close dialog
-                context.go('/invoices'); // Back to invoices tab
+              // 6. 等待寫入本地儲存庫 + 推送後端
+              try {
+                await ref.read(provider.notifier).save();
+              } catch (e) {
+                await Future.delayed(Duration.zero);
+                if (navigator.canPop()) navigator.pop();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('儲存失敗: $e')),
+                );
+                return;
               }
+
+              // 7. 等下一個 frame 確保 dialog 完全 push 完才能 pop,避免 _debugLocked
+              await Future.delayed(Duration.zero);
+
+              // 8. 關閉等待彈窗,並切換回發票清單頁
+              if (navigator.canPop()) navigator.pop();
+              router.go('/invoices');
             },
           ),
           const SizedBox(width: 8),

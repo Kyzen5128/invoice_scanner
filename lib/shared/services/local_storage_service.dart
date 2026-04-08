@@ -84,24 +84,33 @@ class LocalStorageService {
 
   /// 複製圖片：將來自相機快照或相簿選擇的暫存圖檔，合法持久保存至 App 目錄下
   Future<String> copyImageToAppDirectory(String sourcePath, String id) async {
+    // 路徑為空時直接回傳空字串，不做任何動作
+    if (sourcePath.isEmpty) return sourcePath;
+
     final directory = await getApplicationDocumentsDirectory();
     final imgDir = Directory('${directory.path}/${AppConstants.invoiceDirectoryName}/images');
-    
+
     // 確保 images 資料夾存在
     if (!await imgDir.exists()) {
       await imgDir.create(recursive: true);
     }
-    
+
     // 保留原本檔案的副檔名 (如 .jpg, .png)
     final ext = sourcePath.split('.').last;
-    
+
     // 構建有規律性、無碰撞可能性的新檔名 (使用該筆發票紀錄的 UUID)
     final targetPath = '${imgDir.path}/img_$id.$ext';
-    
-    // 實際執行 I/O 拷貝動作
+
+    // 若來源與目標相同 (已複製過)，直接回傳不重複拷貝
+    if (sourcePath == targetPath) return targetPath;
+
+    // 來源檔案不存在時直接回傳原路徑，避免崩潰
     final sourceFile = File(sourcePath);
+    if (!await sourceFile.exists()) return sourcePath;
+
+    // 實際執行 I/O 拷貝動作
     await sourceFile.copy(targetPath);
-    
+
     // 回傳新的永久保存路徑給呼叫端
     return targetPath;
   }

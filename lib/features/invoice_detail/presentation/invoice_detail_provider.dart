@@ -6,6 +6,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../scanner/domain/entities/invoice_entity.dart';
 import '../../../shared/services/local_storage_service.dart';
+import '../../../services/api_service.dart';
 
 // 定義一個簡單的 Provider 來取用 LocalStorageService 服務
 final localStorageServiceProvider = Provider((ref) => LocalStorageService());
@@ -47,5 +48,24 @@ class InvoiceDetailNotifier extends StateNotifier<InvoiceEntity> {
     
     // 呼叫底層儲存服務覆寫或新增該筆發票
     await _storage.saveInvoice(entityToSave);
+
+    // 同步推送到後端資料庫 (Plan B: 本地 + 後端雙寫)
+    // 失敗不影響本地儲存,只記錄錯誤,這樣離線也能用
+    try {
+      final number = entityToSave.invoiceNumber;
+      final date = entityToSave.date ?? entityToSave.scannedAt;
+      if (number != null && number.isNotEmpty) {
+        await ApiService.addInvoice(
+          invoiceNumber: number,
+          period: ApiService.periodFromDate(date),
+          amount: (entityToSave.totalAmount ?? 0).round(),
+          invoiceDate: date.toIso8601String().substring(0, 10),
+          imagePath: entityToSave.imageLocalPath,
+        );
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('[InvoiceDetail] 後端同步失敗 (本地已儲存): $e');
+    }
   }
 }

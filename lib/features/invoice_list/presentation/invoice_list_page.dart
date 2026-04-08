@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/custom_app_bar.dart';
+import '../../../services/api_service.dart';
 import '../../scanner/domain/entities/invoice_entity.dart';
 import 'invoice_list_provider.dart';
 import '../widgets/invoice_card.dart';
@@ -26,6 +27,12 @@ class InvoiceListPage extends ConsumerWidget {
       appBar: CustomAppBar(
         title: '我的發票',
         actions: [
+          // 對獎按鈕
+          IconButton(
+            tooltip: '對獎',
+            icon: const Icon(Icons.emoji_events_rounded),
+            onPressed: () => _checkWinners(context),
+          ),
           // 重新載入按鈕
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
@@ -175,6 +182,93 @@ class InvoiceListPage extends ConsumerWidget {
     );
   }
 
+  /// 呼叫後端 /check 進行對獎,顯示中獎結果
+  Future<void> _checkWinners(BuildContext context) async {
+    // 先抓 navigator,避免 await 後 context 失效
+    final navigator = Navigator.of(context, rootNavigator: true);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      useRootNavigator: true,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final result = await ApiService.checkWinners();
+      // 等一個 frame 讓 dialog push 動畫完成,避免 _debugLocked
+      await Future.delayed(Duration.zero);
+      if (navigator.canPop()) navigator.pop(); // 關掉 loading
+      if (!context.mounted) return;
+
+      final int count = (result['count'] as int?) ?? 0;
+      final int total = (result['total_prize'] as int?) ?? 0;
+      final List winners = (result['winners'] as List?) ?? [];
+
+      showDialog(
+        context: context,
+        builder: (c) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: [
+              Icon(
+                count > 0 ? Icons.emoji_events_rounded : Icons.sentiment_neutral_rounded,
+                color: count > 0 ? Colors.amber : Colors.grey,
+              ),
+              const SizedBox(width: 8),
+              Text(count > 0 ? '恭喜中獎!' : '本次未中獎'),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('中獎張數:$count 張'),
+                Text('總獎金:\$$total'),
+                if (winners.isNotEmpty) ...[
+                  const Divider(height: 24),
+                  const Text('明細:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  ...winners.map((w) {
+                    final m = Map<String, dynamic>.from(w as Map);
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        '• ${m['invoice_number']}  ${m['prize_type']}  \$${m['prize_amount']}',
+                      ),
+                    );
+                  }),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(c),
+              child: const Text('關閉'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      await Future.delayed(Duration.zero);
+      if (navigator.canPop()) navigator.pop(); // 關掉 loading
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: const Text('對獎失敗'),
+          content: Text('無法連線到後端伺服器:\n$e'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(c), child: const Text('確定')),
+          ],
+        ),
+      );
+    }
+  }
+
   /// 顯示刪除確認對話框
   void _confirmDelete(BuildContext context, WidgetRef ref, InvoiceEntity inv) {
     showDialog(
@@ -192,7 +286,7 @@ class InvoiceListPage extends ConsumerWidget {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade50),
             onPressed: () {
               // 確認刪除後，呼叫 provider 中的 deleteInvoice
-              ref.read(invoiceListProvider.notifier).deleteInvoice(inv.id);
+              ref.read(invoiceListProvider.notifier).deleteInvoice(inv.id, invoiceNumber: inv.invoiceNumber);
               Navigator.pop(c);
             },
             child: Text('刪除', style: TextStyle(color: Colors.red.shade600, fontWeight: FontWeight.bold)),
