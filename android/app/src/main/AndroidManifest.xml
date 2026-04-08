@@ -1,9 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 允許 App 發送網路請求（連接後端 API 必須加）-->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="invoice_scanner"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+        <!-- android:usesCleartextTraffic="true"
+             Android 9+ 預設只允許 HTTPS，開發時後端用 http:// 需要加這行
+             正式上線後應改用 HTTPS 並移除此設定 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
