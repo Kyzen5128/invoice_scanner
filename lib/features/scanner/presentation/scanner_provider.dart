@@ -1,7 +1,7 @@
-/// 掃描狀態管理 (Scanner State Provider)
-/// 
-/// 負責處理發票掃描的核心業務邏輯。
-/// 包含呼叫 OcrService 進行文字辨識，將文字解析出發票欄位，以及處理讀取相簿的邏輯。
+// 掃描狀態管理 (Scanner State Provider)
+// 
+// 負責處理發票掃描的核心業務邏輯。
+// 包含呼叫 OcrService 進行文字辨識，將文字解析出發票欄位，以及處理讀取相簿的邏輯。
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

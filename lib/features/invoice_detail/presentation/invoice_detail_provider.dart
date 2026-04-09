@@ -1,7 +1,7 @@
-/// 發票明細編輯的狀態管理 (Invoice Detail Provider)
-/// 
-/// 負責單筆發票的讀寫、編輯與驗證狀態。
-/// 在用戶更動欄位時更新記憶體狀態，並在點擊儲存時複寫至本地儲存方案中。
+// 發票明細編輯的狀態管理 (Invoice Detail Provider)
+// 
+// 負責單筆發票的讀寫、編輯與驗證狀態。
+// 在用戶更動欄位時更新記憶體狀態，並在點擊儲存時複寫至本地儲存方案中。
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../scanner/domain/entities/invoice_entity.dart';

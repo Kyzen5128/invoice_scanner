@@ -1,7 +1,7 @@
-/// 光學字元辨識服務 (OCR Service)
-/// 
-/// 負責呼叫 Google ML Kit 進行單機端的文字辨識。
-/// 此實作支援本地端辨識，不需將圖片上傳伺服器即可完成。
+// 光學字元辨識服務 (OCR Service)
+// 
+// 負責呼叫 Google ML Kit 進行單機端的文字辨識。
+// 此實作支援本地端辨識，不需將圖片上傳伺服器即可完成。
 
 import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';

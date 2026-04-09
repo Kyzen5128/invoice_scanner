@@ -1,8 +1,8 @@
-/// 發票文字解析工具 (Invoice Parser)
-/// 
-/// 負責將 OCR 辨識出來的一長串非結構化純文字，
-/// 利用正規表達式 (Regular Expression) 萃取出發票號碼、日期、金額與店家名稱。
-/// ocrText
+// 發票文字解析工具 (Invoice Parser)
+// 
+// 負責將 OCR 辨識出來的一長串非結構化純文字，
+// 利用正規表達式 (Regular Expression) 萃取出發票號碼、日期、金額與店家名稱。
+// ocrText
 // │
 // ├─【店家名稱】
 // │   取第一個非空白行

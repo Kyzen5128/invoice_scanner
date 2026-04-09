@@ -1,8 +1,8 @@
-/// 發票資料模型實體 (Invoice Entity)
-/// 
-/// 這是整支 App 最核心的資料模型，代表一張發票的完整結構。
-/// 支援 JSON 序列化與反序列化，以便透過 LocalStorage 儲存至本地機器。
-/// 同時利用 copyWith 方法支援不可變 (Immutable) 的狀態更新。
+// 發票資料模型實體 (Invoice Entity)
+// 
+// 這是整支 App 最核心的資料模型，代表一張發票的完整結構。
+// 支援 JSON 序列化與反序列化，以便透過 LocalStorage 儲存至本地機器。
+// 同時利用 copyWith 方法支援不可變 (Immutable) 的狀態更新。
 
 class InvoiceEntity {
   /// 每筆發票的唯一識別碼 (通常使用 UUID 產生)

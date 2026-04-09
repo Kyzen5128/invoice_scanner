@@ -1,7 +1,7 @@
-/// 我的發票清單頁面 (Invoice List Page)
-/// 
-/// 顯示已儲存的所有發票紀錄清單，並統整總花費 (Total Expenses)。
-/// 支援下拉更新資料 (Pull-to-Refresh) 與刪除發票功能。
+// 我的發票清單頁面 (Invoice List Page)
+// 
+// 顯示已儲存的所有發票紀錄清單，並統整總花費 (Total Expenses)。
+// 支援下拉更新資料 (Pull-to-Refresh) 與刪除發票功能。
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

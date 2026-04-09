@@ -1,7 +1,7 @@
-/// 相機掃描頁面 (Camera Scanner Page)
-/// 
-/// 提供即時的相機預覽畫面與半透明的對焦遮罩，讓使用者進行發票或收據掃描。
-/// 支援切換閃光燈、從圖庫載入圖片，並在拍攝後自動引導至 OCR 處理狀態與明細修改頁。
+// 相機掃描頁面 (Camera Scanner Page)
+// 
+// 提供即時的相機預覽畫面與半透明的對焦遮罩，讓使用者進行發票或收據掃描。
+// 支援切換閃光燈、從圖庫載入圖片，並在拍攝後自動引導至 OCR 處理狀態與明細修改頁。
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

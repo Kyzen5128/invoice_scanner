@@ -1,7 +1,7 @@
-/// 日期時間處理工具類 (Date Utils Helper)
-/// 
-/// 負責共用的 DateTime 格式化處理，確保全站各處顯示的日期格式一模一樣。
-/// 使用了 `intl` 套件來執行 DateFormat 轉換。
+// 日期時間處理工具類 (Date Utils Helper)
+// 
+// 負責共用的 DateTime 格式化處理，確保全站各處顯示的日期格式一模一樣。
+// 使用了 `intl` 套件來執行 DateFormat 轉換。
 
 import 'package:intl/intl.dart';
 

@@ -1,7 +1,7 @@
-/// 發票清單的單項卡片元件 (Invoice Card Widget)
-/// 
-/// 負責渲染 `我的發票` 列表中的每一筆紀錄。
-/// 支援點擊整個卡片跳轉，並具備垃圾桶圖示供觸發單筆刪除的事件回調。
+// 發票清單的單項卡片元件 (Invoice Card Widget)
+// 
+// 負責渲染 `我的發票` 列表中的每一筆紀錄。
+// 支援點擊整個卡片跳轉，並具備垃圾桶圖示供觸發單筆刪除的事件回調。
 
 import 'package:flutter/material.dart';
 import '../../../core/utils/date_utils.dart';

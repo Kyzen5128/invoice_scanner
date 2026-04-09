@@ -1,7 +1,7 @@
-/// 發票清單資料狀態管理 (Invoice List Provider)
-/// 
-/// 管理所有已儲存發票的列表清單非同步狀態，包含初始化讀取、排序、刪除處理等邏輯。
-/// 支援 AsyncValue 以便在 UI 層輕鬆處理 loading 與 error 狀態。
+// 發票清單資料狀態管理 (Invoice List Provider)
+// 
+// 管理所有已儲存發票的列表清單非同步狀態，包含初始化讀取、排序、刪除處理等邏輯。
+// 支援 AsyncValue 以便在 UI 層輕鬆處理 loading 與 error 狀態。
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

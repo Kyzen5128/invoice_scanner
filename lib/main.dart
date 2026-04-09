@@ -1,7 +1,7 @@
-/// 主程式進入點暨路由設定 (Main Entry & Router Configuration)
-///
-/// 負責初始化 Flutter App，設定 Riverpod 狀態管理的作用域，
-/// 並使用 go_router 管理底部的導覽列(NavigationBar)與頁面跳轉。
+// 主程式進入點暨路由設定 (Main Entry & Router Configuration)
+//
+// 負責初始化 Flutter App，設定 Riverpod 狀態管理的作用域，
+// 並使用 go_router 管理底部的導覽列(NavigationBar)與頁面跳轉。
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

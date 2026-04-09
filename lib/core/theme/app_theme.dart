@@ -1,8 +1,8 @@
-/// 全域主題設定檔案 (Global App Theme)
-/// 
-/// 負責定義整體的色彩計畫 (Color Scheme)、字體 (Google Fonts)、
-/// 以及共用元件 (按鈕、輸入框、AppBar) 的外觀樣式。
-/// 確保整個 App 的視覺體驗保持一致。
+// 全域主題設定檔案 (Global App Theme)
+// 
+// 負責定義整體的色彩計畫 (Color Scheme)、字體 (Google Fonts)、
+// 以及共用元件 (按鈕、輸入框、AppBar) 的外觀樣式。
+// 確保整個 App 的視覺體驗保持一致。
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

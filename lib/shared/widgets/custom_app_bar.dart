@@ -1,7 +1,7 @@
-/// 自訂應用程式頂部導覽列 (Custom App Bar)
-/// 
-/// 將 Material 預設的 AppBar 重新封裝，加上客製化的漸層背景色與圓角設計。
-/// 統一全站的頂部導覽列風格，使其具備現代感。
+// 自訂應用程式頂部導覽列 (Custom App Bar)
+// 
+// 將 Material 預設的 AppBar 重新封裝，加上客製化的漸層背景色與圓角設計。
+// 統一全站的頂部導覽列風格，使其具備現代感。
 
 import 'package:flutter/material.dart';
 

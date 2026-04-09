@@ -1,8 +1,8 @@
-/// 發票明細與編輯頁面 (Invoice Detail Page)
-/// 
-/// 提供單張發票的詳細資訊展示，包含影像預覽與 OCR 原始擷取文字。
-/// 開放讓使用者可以針對辨識錯誤的欄位進行手動修正 (號碼、日期、金額、店家)，
-/// 並支援點擊右上角勾選按鈕將修改儲存進本地資料庫。
+// 發票明細與編輯頁面 (Invoice Detail Page)
+// 
+// 提供單張發票的詳細資訊展示，包含影像預覽與 OCR 原始擷取文字。
+// 開放讓使用者可以針對辨識錯誤的欄位進行手動修正 (號碼、日期、金額、店家)，
+// 並支援點擊右上角勾選按鈕將修改儲存進本地資料庫。
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

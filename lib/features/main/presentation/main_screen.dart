@@ -1,7 +1,7 @@
-/// 主畫面包裝元件 (Main Screen Wrapper)
-/// 
-/// 使用 go_router 的 StatefulNavigationShell 來包裝底部導覽列 (NavigationBar)，
-/// 使得切換分頁時，舊分頁的狀態能被保留 (保持原有滾動位置、輸入內容等)，不會被重新渲染。
+// 主畫面包裝元件 (Main Screen Wrapper)
+// 
+// 使用 go_router 的 StatefulNavigationShell 來包裝底部導覽列 (NavigationBar)，
+// 使得切換分頁時，舊分頁的狀態能被保留 (保持原有滾動位置、輸入內容等)，不會被重新渲染。
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
