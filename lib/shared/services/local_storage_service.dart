@@ -1,7 +1,7 @@
-/// 本地檔案儲存服務 (Local Storage Service)
-/// 
-/// 負責將發票資料 (JSON) 與實體照片檔案安全地永久儲存在設備本地端。
-/// 使用了 `path_provider` 來取得應用程式的專屬沙盒可讀寫目錄 (Documents Directory)。
+// 本地檔案儲存服務 (Local Storage Service)
+// 
+// 負責將發票資料 (JSON) 與實體照片檔案安全地永久儲存在設備本地端。
+// 使用了 `path_provider` 來取得應用程式的專屬沙盒可讀寫目錄 (Documents Directory)。
 
 import 'dart:convert';
 import 'dart:io';
