@@ -43,11 +43,16 @@ $rows = $pdo->query('SELECT * FROM winning_numbers ORDER BY period DESC, prize_a
   <meta charset="UTF-8">
   <title>中獎號碼管理</title>
   <style>
+    /* ── 整體版面：置中、最大寬度 800px ── */
     body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
     h2   { border-bottom: 2px solid #4F46E5; padding-bottom: 8px; color: #4F46E5; }
+
+    /* ── 操作結果訊息（成功 / 失敗） ── */
     .msg { padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; }
     .msg.success { background: #d1fae5; color: #065f46; }
     .msg.error   { background: #fee2e2; color: #991b1b; }
+
+    /* ── 新增表單樣式 ── */
     form.add-form { background: #f9fafb; padding: 20px; border-radius: 10px; margin-bottom: 32px; }
     label  { display: block; margin-bottom: 12px; font-size: 14px; }
     input  { display: block; margin-top: 4px; padding: 8px; border: 1px solid #d1d5db;
@@ -55,9 +60,13 @@ $rows = $pdo->query('SELECT * FROM winning_numbers ORDER BY period DESC, prize_a
     button.submit { background: #4F46E5; color: #fff; border: none; padding: 10px 24px;
                     border-radius: 6px; cursor: pointer; font-size: 15px; }
     button.submit:hover { background: #4338ca; }
+
+    /* ── 資料列表表格 ── */
     table  { width: 100%; border-collapse: collapse; }
     th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
     th     { background: #f3f4f6; font-size: 13px; color: #374151; }
+
+    /* ── 刪除按鈕（紅色系） ── */
     button.del { background: #fee2e2; color: #991b1b; border: none; padding: 4px 12px;
                  border-radius: 4px; cursor: pointer; }
     button.del:hover { background: #fecaca; }
@@ -114,14 +123,18 @@ $rows = $pdo->query('SELECT * FROM winning_numbers ORDER BY period DESC, prize_a
     </tr>
     <?php foreach ($rows as $row): ?>
     <tr>
+      <!-- htmlspecialchars 防止 XSS：避免資料庫內容含有 HTML 標籤被執行 -->
       <td><?= htmlspecialchars($row['period']) ?></td>
       <td><?= htmlspecialchars($row['prize_type']) ?></td>
       <td><?= htmlspecialchars($row['number']) ?></td>
+      <!-- number_format 加上千分位逗號，使金額易讀（如 2,000,000） -->
       <td>$<?= number_format($row['prize_amount']) ?></td>
       <td>
+        <!-- 刪除表單：以 POST 送出，onsubmit 二次確認避免誤刪 -->
         <form method="POST" style="display:inline"
               onsubmit="return confirm('確定刪除這筆中獎號碼？')">
           <input type="hidden" name="action" value="delete">
+          <!-- 以隱藏欄位傳遞資料庫 id，後端據此刪除對應資料 -->
           <input type="hidden" name="id" value="<?= $row['id'] ?>">
           <button class="del" type="submit">刪除</button>
         </form>

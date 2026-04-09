@@ -9,20 +9,39 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+/// 後端 REST API 的靜態呼叫層
+///
+/// 所有方法皆為 static，不需要實例化即可使用：
+///   final id = await ApiService.addInvoice(...);
+///
+/// 錯誤處理策略：HTTP 狀態碼非預期時拋出 Exception，
+/// 呼叫端（ViewModel / UI）自行 try-catch 並顯示錯誤訊息。
 class ApiService {
   // Android 模擬器：10.0.2.2 對應到電腦的 localhost（Apache 預設 port 80，不需要寫 port）
   static const String baseUrl = 'http://10.0.2.2/invoice_scanner';
 
   /// 從發票日期推算統一發票期別代碼
-  /// 例: 2024-04-15 → 民國113年3-4月 → "11304"
-  ///     2024-05-01 → 民國113年5-6月 → "11306"
+  ///
+  /// 統一發票每兩個月一期，期別代碼 = 民國年 + 該期最後偶數月（2 位）
+  ///   例: 2024-04-15 → 民國113年3-4月 → "11304"
+  ///       2024-05-01 → 民國113年5-6月 → "11306"
+  ///
+  /// [date] 發票上的日期；回傳 5 碼字串，例如 "11304"
   static String periodFromDate(DateTime date) {
-    final roc = date.year - 1911;
-    final evenMonth = date.month % 2 == 0 ? date.month : date.month + 1;
-    return '$roc${evenMonth.toString().padLeft(2, '0')}';
+    final roc = date.year - 1911;                                         // 西元轉民國
+    final evenMonth = date.month % 2 == 0 ? date.month : date.month + 1; // 奇數月進位到偶數月
+    return '$roc${evenMonth.toString().padLeft(2, '0')}';                 // 例: 113 + "04" = "11304"
   }
 
   // === 新增發票 ===
+  //
+  // 若後端偵測到相同 (invoice_number + period) 已存在，則執行更新（非重複新增）
+  // [invoiceNumber] 發票號碼，格式如 "WR-73786487"
+  // [period]        期別代碼，例如 "11304"
+  // [amount]        發票金額（元），預設 0
+  // [invoiceDate]   發票日期字串，格式 "YYYY-MM-DD"，可為 null
+  // [imagePath]     伺服器端圖片路徑，可為 null
+  // 回傳後端 MySQL 的 AUTO_INCREMENT id
   static Future<int?> addInvoice({
     required String invoiceNumber,
     required String period,
@@ -52,6 +71,7 @@ class ApiService {
 
   // === 取得全部發票 ===
   // 回傳所有已存入後端的發票清單，依 created_at 由新到舊排序
+  // 每筆包含: id, invoice_number, period, amount, invoice_date, image_path, created_at
   static Future<List<Map<String, dynamic>>> fetchInvoices() async {
     final res = await http.get(Uri.parse('$baseUrl/invoices.php'));
     if (res.statusCode == 200) {
@@ -77,8 +97,9 @@ class ApiService {
   }
 
   // === 取得某期中獎號碼 ===
-  // period 格式範例: "11304"（民國113年3-4月）
-  // 回傳該期所有中獎號碼，包含 prize_type（獎別）和 prize_amount（獎金）
+  // [period] 期別代碼，格式範例: "11304"（民國113年3-4月）
+  // 回傳該期所有中獎號碼清單，每筆包含：
+  //   prize_type（獎別，如 "特別獎"）、number（號碼）、prize_amount（獎金）
   static Future<List<Map<String, dynamic>>> fetchWinningNumbers(String period) async {
     final res = await http.get(Uri.parse('$baseUrl/winning.php?period=$period'));
     if (res.statusCode == 200) {
@@ -87,7 +108,17 @@ class ApiService {
     throw Exception('fetchWinningNumbers failed: ${res.statusCode}');
   }
 
-  // === 對獎: 取得所有中獎發票及總獎金 ===
+  // === 對獎：取得所有中獎發票及總獎金 ===
+  //
+  // 後端 check.php 以 SQL JOIN 比對 invoices 與 winning_numbers，
+  // 找出發票號碼與期別都吻合的發票。
+  //
+  // 回傳格式：
+  //   {
+  //     "count":       中獎張數（int）,
+  //     "total_prize": 總獎金（int，元）,
+  //     "winners":     中獎發票陣列，每筆含 invoice_number、period、prize_type、prize_amount
+  //   }
   static Future<Map<String, dynamic>> checkWinners() async {
     debugPrint('📤 [API] GET /check  發起對獎請求');
     final res = await http.get(Uri.parse('$baseUrl/check.php'));
