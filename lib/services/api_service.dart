@@ -1,7 +1,5 @@
 // Flutter 端呼叫後端 API 的服務
 //
-// 後端改為 PHP + Apache（XAMPP），不再需要手動啟動 Node.js
-//
 // 注意: baseUrl 依執行環境調整
 //   - Android 模擬器:  http://10.0.2.2/invoice_scanner
 //   - iOS 模擬器/桌面: http://localhost/invoice_scanner
@@ -53,6 +51,7 @@ class ApiService {
   }
 
   // === 取得全部發票 ===
+  // 回傳所有已存入後端的發票清單，依 created_at 由新到舊排序
   static Future<List<Map<String, dynamic>>> fetchInvoices() async {
     final res = await http.get(Uri.parse('$baseUrl/invoices.php'));
     if (res.statusCode == 200) {
@@ -78,6 +77,8 @@ class ApiService {
   }
 
   // === 取得某期中獎號碼 ===
+  // period 格式範例: "11304"（民國113年3-4月）
+  // 回傳該期所有中獎號碼，包含 prize_type（獎別）和 prize_amount（獎金）
   static Future<List<Map<String, dynamic>>> fetchWinningNumbers(String period) async {
     final res = await http.get(Uri.parse('$baseUrl/winning.php?period=$period'));
     if (res.statusCode == 200) {
